@@ -3,30 +3,27 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   username: string;
 
   @Column()
   password: string;
 
-  @CreateDateColumn({
-    type: 'timestamptz',
-  })
+  @CreateDateColumn({ type: 'timestamptz' })
   public created_at: Date;
 
-  @UpdateDateColumn({
-    type: 'timestamptz',
-  })
+  @UpdateDateColumn({ type: 'timestamptz' })
   public updated_at: Date;
 }
