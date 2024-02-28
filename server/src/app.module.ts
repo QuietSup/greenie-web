@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { DiseaseClassifierModule } from './disease-classifier/disease-classifier.module';
+import { DiseasesModule } from './diseases/diseases.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DiseaseClassifierModule } from './disease-classifier/disease-classifier
       synchronize: true,
     }),
     DiseaseClassifierModule,
+    DiseasesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

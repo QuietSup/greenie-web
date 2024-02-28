@@ -2,28 +2,24 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Disease {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  email: string;
+  name: string;
 
-  @Column({ nullable: true })
-  username: string;
-
-  @Column()
-  password: string;
+  @Column({ unique: true })
+  tfCode: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
-  public createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamptz' })
-  public updatedAt: Date;
+  updatedAt: Date;
 }
