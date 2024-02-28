@@ -30,5 +30,5 @@ export class User {
   public updatedAt: Date;
 
   @OneToMany(() => Diagnosis, (diagnosis) => diagnosis.user)
-  diagnoses: Diagnosis;
+  diagnoses: Diagnosis[];
 }
