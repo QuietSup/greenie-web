@@ -1,7 +1,9 @@
+import { Diagnosis } from 'src/diagnoses/entities/diagnosis.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -26,4 +28,7 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamptz' })
   public updatedAt: Date;
+
+  @OneToMany(() => Diagnosis, (diagnosis) => diagnosis.user)
+  diagnoses: Diagnosis;
 }
