@@ -8,6 +8,7 @@ import { User } from './users/entities/user.entity';
 import { DiseaseClassifierModule } from './disease-classifier/disease-classifier.module';
 import { DiseasesModule } from './diseases/diseases.module';
 import { DiagnosesModule } from './diagnoses/diagnoses.module';
+import { SpeciesModule } from './species/species.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { DiagnosesModule } from './diagnoses/diagnoses.module';
     DiseaseClassifierModule,
     DiseasesModule,
     DiagnosesModule,
+    SpeciesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

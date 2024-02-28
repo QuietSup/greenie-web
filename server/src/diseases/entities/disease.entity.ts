@@ -1,7 +1,9 @@
+import { Species } from 'src/species/entities/species.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -16,6 +18,9 @@ export class Disease {
 
   @Column({ unique: true })
   tfCode: number;
+
+  @ManyToOne(() => Species, (species) => species.diseases)
+  species: Species;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
