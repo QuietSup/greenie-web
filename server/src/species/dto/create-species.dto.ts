@@ -1,1 +1,3 @@
-export class CreateSpeciesDto {}
+export class CreateSpeciesDto {
+  name: string;
+}
