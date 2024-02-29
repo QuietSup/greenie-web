@@ -1,9 +1,11 @@
+import { Diagnosis } from 'src/diagnoses/entities/diagnosis.entity';
 import { Species } from 'src/species/entities/species.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -27,4 +29,7 @@ export class Disease {
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
+
+  @OneToMany(() => Diagnosis, (diagnosis) => diagnosis.disease)
+  diagnoses: Diagnosis;
 }
