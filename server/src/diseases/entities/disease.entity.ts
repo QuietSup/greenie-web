@@ -24,12 +24,12 @@ export class Disease {
   @ManyToOne(() => Species, (species) => species.diseases)
   species: Species;
 
+  @OneToMany(() => Diagnosis, (diagnosis) => diagnosis.disease)
+  diagnoses: Diagnosis;
+
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
-
-  @OneToMany(() => Diagnosis, (diagnosis) => diagnosis.disease)
-  diagnoses: Diagnosis;
 }

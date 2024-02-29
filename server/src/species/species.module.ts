@@ -5,5 +5,6 @@ import { SpeciesController } from './species.controller';
 @Module({
   controllers: [SpeciesController],
   providers: [SpeciesService],
+  exports: [SpeciesService],
 })
 export class SpeciesModule {}

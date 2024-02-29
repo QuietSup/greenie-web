@@ -23,12 +23,12 @@ export class User {
   @Column()
   password: string;
 
-  @CreateDateColumn({ type: 'timestamptz' })
-  public createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamptz' })
-  public updatedAt: Date;
-
   @OneToMany(() => Diagnosis, (diagnosis) => diagnosis.user)
   diagnoses: Diagnosis[];
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
 }

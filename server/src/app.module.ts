@@ -9,6 +9,9 @@ import { DiseaseClassifierModule } from './disease-classifier/disease-classifier
 import { DiseasesModule } from './diseases/diseases.module';
 import { DiagnosesModule } from './diagnoses/diagnoses.module';
 import { SpeciesModule } from './species/species.module';
+import { Diagnosis } from './diagnoses/entities/diagnosis.entity';
+import { Disease } from './diseases/entities/disease.entity';
+import { Species } from './species/entities/species.entity';
 
 @Module({
   imports: [
@@ -21,7 +24,7 @@ import { SpeciesModule } from './species/species.module';
       username: 'root',
       password: 'root',
       database: 'postgres',
-      entities: [User],
+      entities: [User, Diagnosis, Disease, Species],
       synchronize: true,
     }),
     DiseaseClassifierModule,
