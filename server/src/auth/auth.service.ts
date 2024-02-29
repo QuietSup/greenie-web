@@ -9,29 +9,55 @@ import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-
     private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: { email },
-    });
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<Omit<User, 'password'>> {
+    const user = await this.usersService.findOneByEmail(email);
 
-    if (user) {
-      return password == user.password ? user : null;
+    if (user && user.password === password) {
+      const { password: _, ...userWithoutPassword } = user;
+      return userWithoutPassword;
     }
-
     return null;
   }
 
-  login() {}
+  login(user: any) {
+    const payload = { email: user.email, sub: user.userId };
+    return {
+      accessToken: this.jwtService.sign(payload, {
+        secret: 'ToBeChanged',
+        expiresIn: '6h',
+      }),
+      refreshToken: this.jwtService.sign(payload, {
+        secret: 'ToBeChanged',
+        expiresIn: '1d',
+      }),
+    };
+  }
+
+  refreshToken(user: any) {
+    const payload = { email: user.email, sub: user.userId };
+    return {
+      accessToken: this.jwtService.sign(payload, {
+        secret: 'ToBeChanged',
+        expiresIn: '6h',
+      }),
+      refreshToken: this.jwtService.sign(payload, {
+        secret: 'ToBeChanged',
+        expiresIn: '1d',
+      }),
+    };
+  }
 
   async register(registerUserDto: RegisterUserDto) {
     const user = await this.usersService.findOneByEmail(registerUserDto.email);

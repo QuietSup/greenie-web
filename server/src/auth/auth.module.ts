@@ -6,9 +6,10 @@ import { User } from 'src/users/entities/user.entity';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from 'src/users/users.module';
 import { LocalStrategy } from './strategies/local.strategy';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), PassportModule, UsersModule],
+  imports: [PassportModule, UsersModule, JwtModule],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy],
 })
