@@ -14,6 +14,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAccessAuthGuard } from 'src/auth/guards/jwt-access.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -29,6 +30,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @ApiBearerAuth('JWT')
   @UseGuards(JwtAccessAuthGuard)
   @Get('me')
   async currentUser(@Req() req: any) {
