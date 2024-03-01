@@ -15,6 +15,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAccessAuthGuard } from 'src/auth/guards/jwt-access.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { User } from 'src/auth/decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -30,12 +31,16 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  /**
+   * Retrieves the current user information.
+   *
+   */
   @ApiBearerAuth('JWT')
   @UseGuards(JwtAccessAuthGuard)
   @Get('me')
-  async currentUser(@Req() req: any) {
-    if (req.user.userId) {
-      const user = await this.usersService.findOne(req.user.userId);
+  async currentUser(@User() reqUser) {
+    if (reqUser.userId) {
+      const user = await this.usersService.findOne(reqUser.userId);
       if (!user) throw new NotFoundException('user not found');
       return user;
     }
