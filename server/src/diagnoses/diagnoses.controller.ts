@@ -44,6 +44,7 @@ export class DiagnosesController {
     @User() reqUser: RequestUser,
     @Body() createDiagnosisDto: CreateDiagnosisDto,
   ) {
+    console.log(createDiagnosisDto);
     return this.diagnosesService.create(reqUser.userId, createDiagnosisDto);
   }
 
