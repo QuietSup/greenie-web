@@ -32,7 +32,7 @@ export class AuthService {
   }
 
   login(user: any) {
-    const payload = { email: user.email, userId: user.userId };
+    const payload = { email: user.email, userId: user.id };
     return {
       accessToken: this.jwtService.sign(payload, {
         secret: 'ToBeChanged',
@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   refreshToken(user: any) {
-    const payload = { email: user.email, sub: user.userId };
+    const payload = { email: user.email, userId: user.id };
     return {
       accessToken: this.jwtService.sign(payload, {
         secret: 'ToBeChanged',
