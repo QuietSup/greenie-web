@@ -18,18 +18,48 @@ export class DiagnosesService {
     private readonly diseaseService: DiseasesService,
   ) {}
 
-  async create(createDiagnosisDto: CreateDiagnosisDto) {
-    const { userId, diseaseId } = createDiagnosisDto;
+  /**
+   * Creates a new diagnosis for the specified user with the provided details.
+   *
+   * @param {number} userId - The ID of the user for whom the diagnosis is being created.
+   * @param {CreateDiagnosisDto} createDiagnosisDto - The DTO containing the details of the diagnosis to be created.
+   * @returns {Promise<Diagnosis>} The newly created diagnosis.
+   * @throws {NotFoundException} If the user or the disease specified in the DTO is not found.
+   */
+  async create(userId: number, createDiagnosisDto: CreateDiagnosisDto) {
+    const { diseaseId } = createDiagnosisDto;
     const user = await this.usersService.findOne(userId);
-    if (!user)
-      throw new NotFoundException(`user with id=${userId} doesn't exist`);
+    if (!user) throw new NotFoundException(`user doesn't exist`);
 
     const disease = await this.diseaseService.findOne(diseaseId);
     if (!disease)
       throw new NotFoundException(`disease with id=${diseaseId} doesn't exist`);
 
-    const diagnosis = this.diagnosesRepository.create({ user, disease });
-    return this.diagnosesRepository.save(diagnosis);
+    return this.diagnosesRepository.save({ user, disease });
+  }
+
+  /**
+   * Finds diagnoses associated with the specified user along with related diseases and species.
+   *
+   * @param {number} userId - The ID of the user.
+   * @returns {Promise<Diagnosis[]>} An array of diagnoses with associated diseases and species.
+   * @throws {NotFoundException} If the user is not found.
+   */
+  async findByUser(userId: number) {
+    const user = await this.usersService.findOne(userId);
+    if (!user) throw new NotFoundException('user not found');
+
+    const diagnosesWithDiseasesWithSpecies =
+      await this.diagnosesRepository.find({
+        where: { user: user },
+        relations: {
+          disease: {
+            species: true,
+          },
+        },
+      });
+
+    return diagnosesWithDiseasesWithSpecies;
   }
 
   findAll() {

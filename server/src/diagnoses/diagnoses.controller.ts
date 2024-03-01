@@ -6,18 +6,45 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { DiagnosesService } from './diagnoses.service';
 import { CreateDiagnosisDto } from './dto/create-diagnosis.dto';
 import { UpdateDiagnosisDto } from './dto/update-diagnosis.dto';
+import { JwtAccessAuthGuard } from 'src/auth/guards/jwt-access.guard';
+import { RequestUser } from 'src/users/entities/request-user.entity';
+import { User } from 'src/auth/decorators/user.decorator';
 
 @Controller('diagnoses')
 export class DiagnosesController {
   constructor(private readonly diagnosesService: DiagnosesService) {}
 
+  /**
+   * Retrieves all diagnoses associated with the current user.
+   *
+   * @param {RequestUser} reqUser - The authenticated user object.
+   * @returns {Promise<Diagnosis[]>} An array of diagnoses associated with the user.
+   */
+  @UseGuards(JwtAccessAuthGuard)
+  @Get('me')
+  findAllByUser(@User() reqUser: RequestUser) {
+    return this.diagnosesService.findByUser(reqUser.userId);
+  }
+
+  /**
+   * Creates a new diagnosis for the current user.
+   *
+   * @param {RequestUser} reqUser - The authenticated user object.
+   * @param {CreateDiagnosisDto} createDiagnosisDto - The DTO containing the details of the diagnosis to be created.
+   * @returns {Promise<Diagnosis>} The newly created diagnosis.
+   */
+  @UseGuards(JwtAccessAuthGuard)
   @Post()
-  create(@Body() createDiagnosisDto: CreateDiagnosisDto) {
-    return this.diagnosesService.create(createDiagnosisDto);
+  create(
+    @User() reqUser: RequestUser,
+    @Body() createDiagnosisDto: CreateDiagnosisDto,
+  ) {
+    return this.diagnosesService.create(reqUser.userId, createDiagnosisDto);
   }
 
   @Get()
