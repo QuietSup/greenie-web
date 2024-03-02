@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
   Logger,
 } from '@nestjs/common';
@@ -10,12 +11,17 @@ import { Repository } from 'typeorm';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigType } from '@nestjs/config';
+import { authConfig } from 'src/config-namespaces/auth/auth.config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+
+    @Inject(authConfig.KEY)
+    private readonly authConf: ConfigType<typeof authConfig>,
   ) {}
 
   async validateUser(
@@ -35,12 +41,12 @@ export class AuthService {
     const payload = { email: user.email, userId: user.id };
     return {
       accessToken: this.jwtService.sign(payload, {
-        secret: 'ToBeChanged',
-        expiresIn: '6h',
+        secret: this.authConf.jwtAccessSecret,
+        expiresIn: this.authConf.jwtAccessExpires,
       }),
       refreshToken: this.jwtService.sign(payload, {
-        secret: 'ToBeChanged',
-        expiresIn: '1d',
+        secret: this.authConf.jwtRefreshSecret,
+        expiresIn: this.authConf.jwtRefreshExpires,
       }),
     };
   }

@@ -16,6 +16,7 @@ import { RolesModule } from './roles/roles.module';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { databaseConfig } from './config-namespaces/database/database.config';
 import { validateDatabaseEnv } from './config-namespaces/database/database-config.validation';
+import { authConfig } from './config-namespaces/auth/auth.config';
 
 @Module({
   imports: [
@@ -44,8 +45,9 @@ import { validateDatabaseEnv } from './config-namespaces/database/database-confi
     RolesModule,
     ConfigModule.forRoot({
       envFilePath: '.env.development',
-      load: [databaseConfig],
+      load: [databaseConfig, authConfig],
       validate: validateDatabaseEnv,
+      isGlobal: true,
     }),
   ],
   controllers: [AppController],
