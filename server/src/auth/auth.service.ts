@@ -39,6 +39,15 @@ export class AuthService {
 
   login(user: any) {
     const payload = { email: user.email, userId: user.id };
+    return this.generateTokens(payload);
+  }
+
+  refreshToken(user: any) {
+    const payload = { email: user.email, userId: user.id };
+    return this.generateTokens(payload);
+  }
+
+  generateTokens(payload: any) {
     return {
       accessToken: this.jwtService.sign(payload, {
         secret: this.authConf.jwtAccessSecret,
@@ -47,20 +56,6 @@ export class AuthService {
       refreshToken: this.jwtService.sign(payload, {
         secret: this.authConf.jwtRefreshSecret,
         expiresIn: this.authConf.jwtRefreshExpires,
-      }),
-    };
-  }
-
-  refreshToken(user: any) {
-    const payload = { email: user.email, userId: user.id };
-    return {
-      accessToken: this.jwtService.sign(payload, {
-        secret: 'ToBeChanged',
-        expiresIn: '6h',
-      }),
-      refreshToken: this.jwtService.sign(payload, {
-        secret: 'ToBeChanged',
-        expiresIn: '1d',
       }),
     };
   }
