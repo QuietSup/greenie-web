@@ -1,8 +1,10 @@
 import { Diagnosis } from 'src/diagnoses/entities/diagnosis.entity';
+import { Role } from 'src/roles/roles.enum';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -31,4 +33,7 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
+
+  @Column({ enum: Role, default: Role.User })
+  role: Role;
 }

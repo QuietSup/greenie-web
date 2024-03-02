@@ -12,6 +12,7 @@ import { SpeciesModule } from './species/species.module';
 import { Diagnosis } from './diagnoses/entities/diagnosis.entity';
 import { Disease } from './diseases/entities/disease.entity';
 import { Species } from './species/entities/species.entity';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { Species } from './species/entities/species.entity';
     DiseasesModule,
     DiagnosesModule,
     SpeciesModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
