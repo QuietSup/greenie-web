@@ -1,8 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { authConfig } from 'src/config-namespaces/auth/auth.config';
+import { UsersService } from 'src/users/users.service';
 
 export class JwtAccessStrategy extends PassportStrategy(
   Strategy,
@@ -11,6 +12,8 @@ export class JwtAccessStrategy extends PassportStrategy(
   constructor(
     @Inject(authConfig.KEY)
     private readonly authConf: ConfigType<typeof authConfig>,
+
+    private readonly usersService: UsersService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -20,6 +23,11 @@ export class JwtAccessStrategy extends PassportStrategy(
   }
 
   async validate(payload: any) {
-    return { userId: payload.userId, email: payload.email };
+    const user = await this.usersService.findOne(payload.userId);
+    if (user) {
+      const { password: _, ...reqUser } = user;
+      return reqUser;
+    }
+    throw new NotFoundException('user not found');
   }
 }

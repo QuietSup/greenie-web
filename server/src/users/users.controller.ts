@@ -39,8 +39,8 @@ export class UsersController {
   @UseGuards(JwtAccessAuthGuard)
   @Get('me')
   async currentUser(@User() reqUser) {
-    if (reqUser.userId) {
-      const user = await this.usersService.findOne(reqUser.userId);
+    if (reqUser.id) {
+      const user = await this.usersService.findOne(reqUser.id);
       if (!user) throw new NotFoundException('user not found');
       return user;
     }
