@@ -6,7 +6,7 @@ export class Species {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @OneToMany(() => Disease, (disease) => disease.species)
