@@ -12,7 +12,6 @@ import { SpeciesModule } from './species/species.module';
 import { Diagnosis } from './diagnoses/entities/diagnosis.entity';
 import { Disease } from './diseases/entities/disease.entity';
 import { Species } from './species/entities/species.entity';
-import { RolesModule } from './roles/roles.module';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { databaseConfig } from './config-namespaces/database/database.config';
 import { validateDatabaseEnv } from './config-namespaces/database/database-config.validation';
@@ -42,7 +41,6 @@ import { authConfig } from './config-namespaces/auth/auth.config';
     DiseasesModule,
     DiagnosesModule,
     SpeciesModule,
-    RolesModule,
     ConfigModule.forRoot({
       envFilePath: '.env.development',
       load: [databaseConfig, authConfig],

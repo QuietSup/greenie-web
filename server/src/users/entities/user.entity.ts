@@ -1,5 +1,5 @@
+import { Role } from 'src/auth/modules/roles/roles.enum';
 import { Diagnosis } from 'src/diagnoses/entities/diagnosis.entity';
-import { Role } from 'src/roles/roles.enum';
 import {
   Column,
   CreateDateColumn,

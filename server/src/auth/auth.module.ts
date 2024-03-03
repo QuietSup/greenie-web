@@ -9,9 +9,10 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { RolesModule } from './modules/roles/roles.module';
 
 @Module({
-  imports: [PassportModule, UsersModule, JwtModule],
+  imports: [PassportModule, UsersModule, JwtModule, RolesModule],
   controllers: [AuthController],
   providers: [
     AuthService,

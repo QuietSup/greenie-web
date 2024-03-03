@@ -11,10 +11,10 @@ import {
 import { SpeciesService } from './species.service';
 import { CreateSpeciesDto } from './dto/create-species.dto';
 import { UpdateSpeciesDto } from './dto/update-species.dto';
-import { RolesGuard } from 'src/roles/roles.guard';
-import { Roles } from 'src/roles/roles.decorator';
-import { Role } from 'src/roles/roles.enum';
 import { JwtAccessAuthGuard } from 'src/auth/guards/jwt-access.guard';
+import { Roles } from 'src/auth/modules/roles/roles.decorator';
+import { Role } from 'src/auth/modules/roles/roles.enum';
+import { RolesGuard } from 'src/auth/modules/roles/roles.guard';
 
 @Controller('species')
 export class SpeciesController {
@@ -26,7 +26,7 @@ export class SpeciesController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.User)
   @UseGuards(JwtAccessAuthGuard)
   @Get()
   findAll() {
