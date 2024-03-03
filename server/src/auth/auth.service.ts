@@ -13,6 +13,7 @@ import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigType } from '@nestjs/config';
 import { authConfig } from 'src/config-namespaces/auth/auth.config';
+import { Role } from 'src/roles/roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -65,6 +66,12 @@ export class AuthService {
     if (user) throw new ConflictException('user already exists');
 
     const newUser = await this.usersService.create(registerUserDto);
+    if (
+      registerUserDto.adminSecret &&
+      registerUserDto.adminSecret === this.authConf.mainAdminSecret
+    ) {
+      newUser.role = Role.Admin;
+    }
     if (!newUser) throw new BadRequestException('something went wrong');
 
     return newUser;
