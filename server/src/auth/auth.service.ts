@@ -61,19 +61,14 @@ export class AuthService {
     };
   }
 
-  async register(registerUserDto: RegisterUserDto) {
-    const user = await this.usersService.findOneByEmail(registerUserDto.email);
-    if (user) throw new ConflictException('user already exists');
+  register(registerUserDto: RegisterUserDto) {
+    const { adminSecret, ...registerUser } = registerUserDto;
 
-    const newUser = await this.usersService.create(registerUserDto);
-    if (
-      registerUserDto.adminSecret &&
-      registerUserDto.adminSecret === this.authConf.mainAdminSecret
-    ) {
-      newUser.role = Role.Admin;
+    let role: Role;
+    if (adminSecret === this.authConf.mainAdminSecret) {
+      role = Role.Admin;
     }
-    if (!newUser) throw new BadRequestException('something went wrong');
 
-    return newUser;
+    return this.usersService.create({ role, ...registerUser });
   }
 }

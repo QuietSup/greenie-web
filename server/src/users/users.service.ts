@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Role } from 'src/roles/roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -13,12 +18,15 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> | null {
-    const user = this.userRepository.create(createUserDto);
+    const user = await this.findOneByEmail(createUserDto.email);
+    if (user) throw new ConflictException('user already exists');
 
-    const insertResult = await this.userRepository.insert(user);
-    if (insertResult.identifiers.length <= 0) return null;
+    const newUser = this.userRepository.create(createUserDto);
+    if (createUserDto.role && createUserDto.role) {
+      newUser.role = createUserDto.role;
+    }
 
-    return user;
+    return this.userRepository.save(newUser);
   }
 
   findAll() {
