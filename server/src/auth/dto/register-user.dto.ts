@@ -1,4 +1,3 @@
-export class RegisterUserDto {
-  email: string;
-  password: string;
-}
+import { AuthBaseDto } from './auth-base.dto';
+
+export class RegisterUserDto extends AuthBaseDto {}
