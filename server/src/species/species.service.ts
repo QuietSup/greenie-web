@@ -25,10 +25,10 @@ export class SpeciesService {
    * @throws {ConflictException} when species with such name already exists in the database
    */
   async create(createSpeciesDto: CreateSpeciesDto): Promise<Species> {
-    const species = await this.speciesRepository.existsBy({
+    const alreadyExists = await this.speciesRepository.existsBy({
       name: createSpeciesDto.name,
     });
-    if (!species) throw new ConflictException('species already exists');
+    if (alreadyExists) throw new ConflictException('species already exists');
 
     return this.speciesRepository.save(createSpeciesDto);
   }
@@ -94,8 +94,7 @@ export class SpeciesService {
    */
   async remove(id: number): Promise<Species> {
     const species = await this.findOne(id);
-    if (!species)
-      throw new NotFoundException(`species with id=${id} doesn't exist`);
+    if (!species) throw new NotFoundException(`species with doesn't exist`);
     return this.speciesRepository.remove(species);
   }
 }
