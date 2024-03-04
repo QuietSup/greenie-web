@@ -25,7 +25,7 @@ export class Disease {
   species: Species;
 
   @OneToMany(() => Diagnosis, (diagnosis) => diagnosis.disease)
-  diagnoses: Diagnosis;
+  diagnoses: Diagnosis[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
