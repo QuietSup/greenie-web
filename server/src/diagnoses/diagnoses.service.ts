@@ -62,10 +62,21 @@ export class DiagnosesService {
     return diagnosesWithDiseasesWithSpecies;
   }
 
+  /**
+   * Returns all diagnoses in the database.
+   *
+   * @returns An array of all diagnoses in the database.
+   */
   findAll() {
     return this.diagnosesRepository.find();
   }
 
+  /**
+   * Finds a single diagnosis by its ID.
+   *
+   * @param id - The ID of the diagnosis to find.
+   * @returns The found diagnosis, or null if no diagnosis with the specified ID was found.
+   */
   findOne(id: number) {
     return this.diagnosesRepository.findOneBy({ id });
   }
@@ -78,7 +89,10 @@ export class DiagnosesService {
    * @returns The updated diagnosis.
    * @throws NotFoundException if the diagnosis or disease with the specified ID is not found.
    */
-  async update(id: number, { diseaseId }: UpdateDiagnosisDto) {
+  async update(
+    id: number,
+    { diseaseId }: UpdateDiagnosisDto,
+  ): Promise<Diagnosis> {
     const diagnosis = await this.diagnosesRepository.findOneBy({ id });
     if (!diagnosis) throw new NotFoundException('diagnosis not found');
 
@@ -91,7 +105,14 @@ export class DiagnosesService {
     return this.diagnosesRepository.save(diagnosis);
   }
 
-  async remove(id: number) {
+  /**
+   * Deletes a diagnosis with the specified ID.
+   *
+   * @param id - The ID of the diagnosis to delete.
+   * @returns The deleted diagnosis.
+   * @throws NotFoundException if the diagnosis with the specified ID is not found.
+   */
+  async remove(id: number): Promise<Diagnosis> {
     const diagnosis = await this.findOne(id);
     if (!diagnosis)
       throw new NotFoundException(`diagnosis with id=${id} doesn't exist`);
