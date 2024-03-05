@@ -23,11 +23,12 @@ export class DiseasesService {
 
   /**
    * Creates a new disease.
-   * @throws ConflictException if a disease with the same TF code
-   * or name and species already exists.
-   * or species with such id doesn't exist
+   *
    * @param createDiseaseDto The data to create the disease.
    * @returns The created disease object.
+   * @throws {ConflictException} if a disease with the same TF code,
+   * or name and species already exists.
+   * @throws {NotFoundException} if species with such id doesn't exist
    */
   async create(createDiseaseDto: CreateDiseaseDto): Promise<Disease> {
     const disease = this.diseasesRepository.create(createDiseaseDto);
