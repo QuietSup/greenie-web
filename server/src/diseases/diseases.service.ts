@@ -1,11 +1,12 @@
 import {
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateDiseaseDto } from './dto/create-disease.dto';
 import { UpdateDiseaseDto } from './dto/update-disease.dto';
-import { Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { Disease } from './entities/disease.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Species } from 'src/species/entities/species.entity';
@@ -99,39 +100,47 @@ export class DiseasesService {
    */
   async update(
     id: number,
-    updateDiseaseDto: UpdateDiseaseDto,
+    { name, speciesId, tfCode }: UpdateDiseaseDto,
   ): Promise<Disease> {
     const disease = await this.findOne(id);
     if (!disease)
       throw new NotFoundException("disease with such id doesn't exist");
-    // `undefined` makes typeorm `save` not to change the field
-    disease.name = updateDiseaseDto.name ?? undefined;
-    disease.tfCode = updateDiseaseDto.tfCode ?? undefined;
-    disease.species.id = updateDiseaseDto.speciesId ?? undefined;
 
-    if (disease.tfCode) {
+    let species: Species | undefined;
+    if (speciesId) {
+      species = await this.speciesRepository.findOneBy({
+        id: speciesId,
+      });
+      if (!species) throw new NotFoundException("species doesn't exist");
+    }
+
+    if (tfCode) {
       const tfCodeExists = await this.diseasesRepository.existsBy({
-        tfCode: disease.tfCode,
+        tfCode: tfCode,
       });
       if (tfCodeExists)
         throw new ConflictException('disease with this tf code already exists');
     }
 
-    // within each species disease names must be unique
-    if (disease.species?.id && disease.name) {
+    // disease names must be unique within each species
+    if (tfCode && speciesId) {
       const nameAndSpeciesIdExists = await this.diseasesRepository.exists({
         where: {
-          tfCode: disease.tfCode,
-          species: { id: disease.species.id },
+          tfCode: tfCode,
+          species: { id: species.id },
         },
       });
       if (nameAndSpeciesIdExists)
         throw new ConflictException(
-          'disease with such name and species already exists',
+          'disease with such combination of name and species already exists',
         );
     }
 
-    return this.diseasesRepository.save(disease, {});
+    disease.name = name ?? disease.name;
+    disease.tfCode = tfCode ?? disease.tfCode;
+    disease.species = species ?? disease.species;
+
+    return this.diseasesRepository.save(disease);
   }
 
   /**
