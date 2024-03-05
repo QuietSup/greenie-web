@@ -70,8 +70,25 @@ export class DiagnosesService {
     return this.diagnosesRepository.findOneBy({ id });
   }
 
-  update(id: number, updateDiagnosisDto: UpdateDiagnosisDto) {
-    return `This action updates a #${id} diagnosis`;
+  /**
+   * Updates an existing diagnosis.
+   *
+   * @param id - The ID of the diagnosis to update.
+   * @param updateDiagnosisDto - The DTO containing the updated details of the diagnosis.
+   * @returns The updated diagnosis.
+   * @throws NotFoundException if the diagnosis or disease with the specified ID is not found.
+   */
+  async update(id: number, { diseaseId }: UpdateDiagnosisDto) {
+    const diagnosis = await this.diagnosesRepository.findOneBy({ id });
+    if (!diagnosis) throw new NotFoundException('diagnosis not found');
+
+    if (diseaseId) {
+      const disease = await this.diseaseService.findOne(diseaseId);
+      if (!disease) throw new NotFoundException('disease not found');
+      diagnosis.disease = disease;
+    }
+
+    return this.diagnosesRepository.save(diagnosis);
   }
 
   async remove(id: number) {
